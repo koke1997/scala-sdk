@@ -1,0 +1,47 @@
+<!-- https://www.playframework.com/documentation/latest/SettingsLogger -->
+<configuration>
+
+  <conversionRule conversionWord="coloredLevel" converterClass="play.api.libs.logback.ColoredLevel" />
+
+  <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+    <file>${application.home:-.}/logs/application.log</file>
+    <encoder>
+      <pattern>%date [%level] from %logger in %thread - %message%n%xException</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%coloredLevel %logger{15} - %message%n%xException{10}</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="ASYNCFILE" class="ch.qos.logback.classic.AsyncAppender">
+    <appender-ref ref="FILE" />
+  </appender>
+
+  <appender name="ASYNCSTDOUT" class="ch.qos.logback.classic.AsyncAppender">
+    <appender-ref ref="STDOUT" />
+  </appender>
+
+  <logger name="play" level="DEBUG" />
+  <logger name="application" level="DEBUG" />
+  <logger name="controllers" level="DEBUG" />
+  <logger name="services" level="DEBUG" />
+  <logger name="filters" level="DEBUG" />
+  
+  <!-- Add detailed logging for request handling -->
+  <logger name="play.api.http" level="DEBUG" />
+  <logger name="play.api.mvc" level="DEBUG" />
+  <logger name="play.core.parsers" level="DEBUG" />
+  
+  <!-- Specific logger for request body processing -->
+  <logger name="play.api.mvc.BodyParsers" level="TRACE" />
+  <logger name="play.core.server.netty" level="DEBUG" />
+
+  <root level="WARN">
+    <appender-ref ref="STDOUT" />
+    <appender-ref ref="FILE" />
+  </root>
+
+</configuration>

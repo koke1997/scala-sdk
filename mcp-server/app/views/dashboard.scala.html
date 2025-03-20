@@ -1,0 +1,182 @@
+@(title: String)
+
+@main(title) {
+    <div class="dashboard-container">
+        <div class="row mb-4">
+            <div class="col">
+                <h1>MCP Server Dashboard</h1>
+                <p class="lead">Model Context Protocol Server for Claude Desktop & Cursor</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">Server Status</div>
+                    <div class="card-body">
+                        <p class="status-info">
+                            Status: <span id="server-status" class="status-success">Checking...</span>
+                        </p>
+                        <p>Uptime: <span id="server-uptime">Loading...</span></p>
+                        <p>Version: <span id="server-version">Loading...</span></p>
+                        <p>Environment: <span id="server-env">Loading...</span></p>
+                        <button id="refresh-status" type="button" class="btn btn-sm btn-primary">Refresh</button>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">API Documentation</div>
+                    <div class="card-body">
+                        <h5>Endpoints</h5>
+                        <ul>
+                            <li><code>GET /health</code> - Health check</li>
+                            <li><code>POST /api/context</code> - Create context</li>
+                            <li><code>GET /api/context/:id</code> - Get context by ID</li>
+                            <li><code>PUT /api/context/:id</code> - Update context</li>
+                        </ul>
+                        <h5>Test API</h5>
+                        <div class="mb-3">
+                            <button id="create-test-context" type="button" class="btn btn-sm btn-success">Create Test Context</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        Request/Response Log
+                        <button id="clear-log" type="button" class="btn btn-sm btn-outline-secondary">Clear</button>
+                    </div>
+                    <div class="card-body request-log" id="request-log">
+                        <div class="text-center text-muted">
+                            <p>No requests logged yet.</p>
+                            <p>Send requests to the API to see them logged here.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Server status polling
+        function updateServerStatus() {
+            fetch('/health')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('server-status').textContent = data.status;
+                    document.getElementById('server-uptime').textContent = 
+                        Math.round(data.uptime_ms / 1000) + ' seconds';
+                    document.getElementById('server-env').textContent = data.environment;
+                    document.getElementById('server-version').textContent = data.version;
+                })
+                .catch(error => {
+                    console.error('Error fetching server status:', error);
+                    document.getElementById('server-status').textContent = 'Error';
+                    document.getElementById('server-status').className = 'status-error';
+                });
+        }
+        
+        // Log a request/response pair in the dashboard
+        function logRequest(method, url, requestBody, status, responseBody) {
+            const requestLog = document.getElementById('request-log');
+            
+            // Clear "no requests" message if it exists
+            if (requestLog.querySelector('.text-muted')) {
+                requestLog.innerHTML = '';
+            }
+            
+            const timestamp = new Date().toLocaleTimeString();
+            const statusClass = status >= 200 && status < 300 ? 'success' : 'danger';
+            
+            const logEntry = document.createElement('div');
+            logEntry.className = 'mb-4';
+            logEntry.innerHTML = `
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <span class="badge bg-primary">${method}</span>
+                        <span class="text-monospace">${url}</span>
+                    </div>
+                    <div>
+                        <span class="badge bg-${statusClass}">${status}</span>
+                        <small class="text-muted">${timestamp}</small>
+                    </div>
+                </div>
+                ${requestBody ? `
+                <div class="mt-2">
+                    <small class="text-muted">Request:</small>
+                    <pre>${JSON.stringify(requestBody, null, 2)}</pre>
+                </div>` : ''}
+                <div class="mt-2">
+                    <small class="text-muted">Response:</small>
+                    <pre>${JSON.stringify(responseBody, null, 2)}</pre>
+                </div>
+            `;
+            
+            // Add to log (at the beginning)
+            requestLog.insertBefore(logEntry, requestLog.firstChild);
+        }
+        
+        // Create a test context for demonstration
+        document.getElementById('create-test-context').addEventListener('click', function() {
+            const requestBody = {
+                text: "This is a test context created from the dashboard at " + new Date().toLocaleString(),
+                metadata: {
+                    source: "dashboard",
+                    timestamp: Date.now()
+                }
+            };
+            
+            fetch('/api/context', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestBody)
+            })
+            .then(response => {
+                const status = response.status;
+                return response.json().then(data => {
+                    logRequest('POST', '/api/context', requestBody, status, data);
+                    
+                    // If successful, also fetch the created context
+                    if (status >= 200 && status < 300 && data.id) {
+                        setTimeout(() => {
+                            fetch(`/api/context/${data.id}`)
+                                .then(response => {
+                                    const getStatus = response.status;
+                                    return response.json().then(getData => {
+                                        logRequest('GET', `/api/context/${data.id}`, null, getStatus, getData);
+                                    });
+                                });
+                        }, 500);
+                    }
+                });
+            })
+            .catch(error => {
+                console.error('Error creating test context:', error);
+            });
+        });
+        
+        // Clear the request log
+        document.getElementById('clear-log').addEventListener('click', function() {
+            const requestLog = document.getElementById('request-log');
+            requestLog.innerHTML = `
+                <div class="text-center text-muted">
+                    <p>Log cleared.</p>
+                    <p>Send requests to the API to see them logged here.</p>
+                </div>
+            `;
+        });
+        
+        // Refresh status button
+        document.getElementById('refresh-status').addEventListener('click', updateServerStatus);
+        
+        // Initial update
+        updateServerStatus();
+        
+        // Poll for updates every 30 seconds
+        setInterval(updateServerStatus, 30000);
+    </script>
+}

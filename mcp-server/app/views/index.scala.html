@@ -1,0 +1,64 @@
+@(title: String)
+
+@main(title) {
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h1 class="h4 mb-0">Model Context Protocol Server</h1>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-success">
+                            <strong>Server is running!</strong> The MCP server is operational.
+                        </div>
+                        
+                        <h2 class="h5 mt-4">API Endpoints</h2>
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Method</th>
+                                    <th>Path</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>GET</code></td>
+                                    <td><code>/health</code></td>
+                                    <td>Health check endpoint</td>
+                                </tr>
+                                <tr>
+                                    <td><code>POST</code></td>
+                                    <td><code>/api/context</code></td>
+                                    <td>Create a new context</td>
+                                </tr>
+                                <tr>
+                                    <td><code>GET</code></td>
+                                    <td><code>/api/context/:id</code></td>
+                                    <td>Get a context by ID</td>
+                                </tr>
+                                <tr>
+                                    <td><code>PUT</code></td>
+                                    <td><code>/api/context/:id</code></td>
+                                    <td>Update an existing context</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <div class="mt-4">
+                            <h2 class="h5">Test the API</h2>
+                            <p>Use curl or any HTTP client to interact with the API:</p>
+                            <pre><code>curl -X POST http://localhost:9000/api/context \
+  -H "Content-Type: application/json" \
+  -d '{"text": "Test context", "metadata": {"source": "test"}}'</code></pre>
+                        </div>
+                    </div>
+                    <div class="card-footer text-muted">
+                        <small>Model Context Protocol Server for Claude Desktop & Cursor</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

@@ -1,0 +1,7 @@
+# Scala SDK
+
+This repository contains the Scala SDK with mcp-server as a regular directory.
+
+## Structure
+
+- `mcp-server/`: Server implementation

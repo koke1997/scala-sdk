@@ -1,0 +1,387 @@
+{
+    "info": {
+        "_postman_id": "af7c3e9b-8d25-4fe4-af78-e2b03807ab11",
+        "name": "MCP Server API Tests",
+        "description": "Tests for MCP Server API integration with Ollama",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "http://localhost:9000",
+            "type": "string",
+            "description": "Base URL for the MCP server"
+        },
+        {
+            "key": "ollama_url",
+            "value": "http://localhost:11434",
+            "type": "string",
+            "description": "Base URL for the Ollama API"
+        }
+    ],
+    "item": [
+        {
+            "name": "Direct Ollama API",
+            "item": [
+                {
+                    "name": "List Models",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{ollama_url}}/api/tags",
+                            "host": [
+                                "{{ollama_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "tags"
+                            ]
+                        },
+                        "description": "Get list of available models directly from Ollama"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Generate Text",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"model\": \"phi4-mini\",\n    \"prompt\": \"What is Scala programming language?\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{ollama_url}}/api/generate",
+                            "host": [
+                                "{{ollama_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "generate"
+                            ]
+                        },
+                        "description": "Generate text directly from Ollama API"
+                    },
+                    "response": []
+                }
+            ],
+            "description": "Tests that directly interact with the Ollama API to verify functionality"
+        },
+        {
+            "name": "Standard Play API",
+            "item": [
+                {
+                    "name": "List Models",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/ollama/models",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "ollama",
+                                "models"
+                            ]
+                        },
+                        "description": "Get list of available models via Standard Play controller"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Generate Text (JSON)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"model\": \"phi4-mini\",\n    \"prompt\": \"What is Scala programming language? Explain briefly.\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/ollama/generate",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "ollama",
+                                "generate"
+                            ]
+                        },
+                        "description": "Generate text via Standard Play controller using JSON request"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Generate Text (Plain)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "text/plain"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "Tell me about Scala programming language in 3 sentences."
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/ollama/generate-text",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "ollama",
+                                "generate-text"
+                            ]
+                        },
+                        "description": "Generate text via Standard Play controller using plain text request"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Debug Request",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"model\": \"phi4-mini\",\n    \"prompt\": \"This is a test request to debug the API\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/ollama/debug",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "ollama",
+                                "debug"
+                            ]
+                        },
+                        "description": "Debug endpoint that shows details about the incoming request"
+                    },
+                    "response": []
+                }
+            ],
+            "description": "Tests for the standard Play Framework controller implementation"
+        },
+        {
+            "name": "Pekko API",
+            "item": [
+                {
+                    "name": "List Models",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/pekko/models",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "pekko",
+                                "models"
+                            ]
+                        },
+                        "description": "Get list of available models via Pekko controller"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Generate Text (JSON)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"model\": \"phi4-mini\",\n    \"prompt\": \"What is Apache Pekko? Explain briefly.\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/pekko/generate",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "pekko",
+                                "generate"
+                            ]
+                        },
+                        "description": "Generate text via Pekko controller using JSON request"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Generate Text (Plain)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "text/plain"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "Tell me about Apache Pekko framework in 3 sentences."
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/pekko/text",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "pekko",
+                                "text"
+                            ]
+                        },
+                        "description": "Generate text via Pekko controller using plain text request"
+                    },
+                    "response": []
+                }
+            ],
+            "description": "Tests for the Pekko HTTP based controller implementation"
+        },
+        {
+            "name": "MCP API",
+            "item": [
+                {
+                    "name": "Process Context",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"messages\": [\n        {\n            \"role\": \"user\",\n            \"content\": \"What is Scala programming language?\"\n        }\n    ],\n    \"model\": \"phi4-mini\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/context",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "context"
+                            ]
+                        },
+                        "description": "Process a new context for Claude Desktop compatibility"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Context",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"messages\": [\n        {\n            \"role\": \"user\",\n            \"content\": \"What is Scala programming language?\"\n        },\n        {\n            \"role\": \"assistant\",\n            \"content\": \"Scala is a programming language...\"\n        },\n        {\n            \"role\": \"user\",\n            \"content\": \"Tell me more about its features\"\n        }\n    ],\n    \"model\": \"phi4-mini\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/context/12345",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "context",
+                                "12345"
+                            ]
+                        },
+                        "description": "Update an existing context with new messages"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Context",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/context/12345",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "context",
+                                "12345"
+                            ]
+                        },
+                        "description": "Retrieve a previously saved context"
+                    },
+                    "response": []
+                }
+            ],
+            "description": "Tests for the Claude Desktop compatibility API"
+        }
+    ],
+    "event": [
+        {
+            "listen": "prerequest",
+            "script": {
+                "type": "text/javascript",
+                "exec": [
+                    ""
+                ]
+            }
+        },
+        {
+            "listen": "test",
+            "script": {
+                "type": "text/javascript",
+                "exec": [
+                    "pm.test(\"Response is successful\", function() {",
+                    "    pm.response.to.be.success;",
+                    "});",
+                    "",
+                    "pm.test(\"Response is JSON\", function() {",
+                    "    pm.response.to.be.json;",
+                    "});",
+                    "",
+                    "pm.test(\"Response time is reasonable\", function() {",
+                    "    pm.expect(pm.response.responseTime).to.be.below(5000);",
+                    "});"
+                ]
+            }
+        }
+    ]
+}

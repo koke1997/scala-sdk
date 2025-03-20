@@ -1,0 +1,41 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+
+# Home page
+GET     /                           controllers.HomeController.index(title: String ?= "MCP Server")
+GET     /dashboard                  controllers.HomeController.dashboard()
+GET     /health                     controllers.HomeController.healthCheck()
+GET     /ready                      controllers.HomeController.ready()
+GET     /status                     controllers.HomeController.status()
+
+# MCP API endpoints for Claude Desktop compatibility
+POST    /api/context                controllers.MCPController.process
+PUT     /api/context/:id            controllers.MCPController.updateContext(id: String)
+GET     /api/context/:id            controllers.MCPController.getContext(id: String)
+POST    /api/context/:id/ollama     controllers.MCPController.processWithOllama(id: String)
+
+# Basic Ollama API endpoints 
+GET     /api/ollama/models          controllers.api.OllamaController.listModels()
+POST    /api/ollama/text            controllers.api.OllamaController.generateText()
+POST    /api/ollama/debug           controllers.api.OllamaController.debug()
+POST    /api/ollama/generate        controllers.api.OllamaGenerationController.generate()
+
+# Streaming endpoints
+POST    /api/ollama/stream          controllers.api.StreamingController.streamGenerate()
+POST    /api/ollama/stream-text     controllers.api.StreamingController.streamGenerateText()
+
+# Pekko API endpoints
+GET     /api/pekko/models           controllers.PekkoOllamaController.listModels()
+POST    /api/pekko/generate         controllers.PekkoOllamaController.generate()
+POST    /api/pekko/text             controllers.PekkoOllamaController.generateText()
+
+# Routes for Spark API
+GET     /api/spark/info            controllers.api.SparkController.info()
+POST    /api/spark/query           controllers.api.SparkController.query()
+
+# Routes for data processing
+POST    /api/data/csv               controllers.api.DataController.loadCsv()
+POST    /api/data/keywords          controllers.api.DataController.extractKeywords()
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
