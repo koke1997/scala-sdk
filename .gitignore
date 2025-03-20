@@ -28,6 +28,9 @@ project/metals.sbt
 .ammonite/
 metals.sbt
 
+# Trunk
+.trunk/
+
 # macOS
 .DS_Store
 
@@ -69,3 +72,7 @@ build/
 !.env.example
 local.conf
 application.local.conf
+
+# Handle long filenames in Windows
+# This specifically addresses issues with semanticdb files
+**/semanticdb/
