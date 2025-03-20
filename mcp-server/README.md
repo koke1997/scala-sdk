@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # MCP Server
 
 ## Overview
@@ -57,3 +58,13 @@ Application configuration is located in conf/application.conf.
 
 ## License
 This project is proprietary and confidential.
+=======
+# MCP Server
+
+This directory contains the MCP server implementation.
+
+## Features
+
+- Server-side functionality
+- Integration with the Scala SDK
+>>>>>>> dee6e0947d9522eb8e7035d43ce27e00d55f4b6d

@@ -76,8 +76,11 @@ application.local.conf
 # Handle long filenames in Windows
 # This specifically addresses issues with semanticdb files
 **/semanticdb/
+<<<<<<< HEAD
 
 # Exclude mcp-server project files
 mcp-server/project/project/project
 
 mcp-server/target
+=======
+>>>>>>> dee6e0947d9522eb8e7035d43ce27e00d55f4b6d
